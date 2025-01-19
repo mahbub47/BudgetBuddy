@@ -9,36 +9,8 @@ body {
     height: 100vh !important;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-
-nav, body {
+    justify-content: center;
     background-color: #F1FAEE !important;
-}
-
-.navbar-brand{
-    color: #001219 !important;
-}
-
-footer {
-    background-color: #001219 !important;
-    p {
-        color: #F1FAEE;
-    }
-}
-
-.logout-btn {
-    background-color: #0A9396 !important;
-    color: #F1FAEE !important;
-}
-
-th {
-    background-color: #0A9396 !important;
-    color: #F1FAEE !important;
-}
-td {
-    background-color: #94D2BD !important;
-    color: #001219 !important;
 }
 
 .edt-btn {
@@ -50,14 +22,9 @@ td {
     background-color: #001219 !important;
     color: #F1FAEE !important;
 }
-.add-expense-form {
-    display: none;
-    border: 5px solid #0A9396;
-    border-radius: 10px;
-}
 
-.update-budget-form {
-    display: none;
+.update-expense-form {
+    display: block;
     border: 5px solid #0A9396;
     border-radius: 10px;
 }

@@ -7,9 +7,21 @@
     }
 
     $usermail = $_SESSION['email'];
-    $user = mysqli_query($conn,"SELECT `id` FROM `users` WHERE `email` = '$usermail'");
+    $user = mysqli_query($conn,"SELECT `id`, `budget` FROM `users` WHERE `email` = '$usermail'");
     $rowuser = $user->fetch_assoc();
     $userid = $rowuser['id'];
+    $userbudget = $rowuser['budget'];
+
+    $userexp = mysqli_query($conn,"SELECT SUM(`amount`) AS `total_amount` FROM `expenses` WHERE `user_id` = '$userid'");
+    $userex = $userexp->fetch_assoc();
+    $ttlexp = $userex['total_amount'];
+
+    $userexpmnt = mysqli_query($conn,"SELECT SUM(amount) AS `total_expense_monthly` FROM `expenses` WHERE `user_id` = '$userid' AND MONTH(`expense_date`) = MONTH(CURRENT_DATE) AND YEAR(`expense_date`) = YEAR(CURRENT_DATE)");
+    $userexmn = $userexpmnt->fetch_assoc();
+    $ttlexpmnt = $userexmn['total_expense_monthly'];
+
+    $budgetrem = $userbudget - $ttlexp;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,6 +73,20 @@
         <button class="btn my-3 edt-btn" onclick="closeForm()">Close</button>
     </div>
 
+    <!-- Update budget -->
+    <div class="container-lg py-5 update-budget-form" id="update-budget-form">
+        <h3>Update budget</h3>
+        <form method="POST" action="/php/updatebudget.php">
+            <div class="mb-3">
+                <label for="category" class="form-label">Budget</label>
+                <input type="text" class="form-control" id="budget" name="budget" placeholder="Enter budget" required>
+                <input type="hidden" name='id' value="<?php echo $userid ?>">
+            </div>
+            <button type="submit" class="btn edt-btn">Update budget</button>
+        </form>
+        <button class="btn my-3 edt-btn" onclick="closeUpdateBudgetForm()">Close</button>
+    </div>
+
     <!-- Dashboard Content -->
     <div class="container py-5" id="expense">
         <h2 class="text-center mb-4">Manage your finance</h2>
@@ -70,8 +96,7 @@
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Total Expenses</h5>
-                        <p class="card-text display-6">৳ 25,000</p>
-                        <a href="#" class="btn edt-btn">View Details</a>
+                        <p class="card-text display-6">৳ <?php echo $ttlexp ?></p>
                     </div>
                 </div>
             </div>
@@ -79,8 +104,8 @@
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Budget Remaining</h5>
-                        <p class="card-text display-6">৳ 10,000</p>
-                        <a href="#" class="btn edt-btn">Update Budget</a>
+                        <p class="card-text display-6">৳ <?php echo $budgetrem ?></p>
+                        <a href="#" class="btn edt-btn" onclick="showUpdateBudgetForm()">Update Budget</a>
                     </div>
                 </div>
             </div>
@@ -88,8 +113,7 @@
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Expenses This Month</h5>
-                        <p class="card-text display-6">৳ 5,000</p>
-                        <a href="#" class="btn edt-btn">View Breakdown</a>
+                        <p class="card-text display-6">৳ <?php echo $ttlexpmnt ?></p>
                     </div>
                 </div>
             </div>
